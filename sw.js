@@ -1,4 +1,4 @@
-const CACHE = "calorie-quest-v4";
+const CACHE = "calorie-quest-v5";
 const ASSETS = [
   "./",
   "./index.html",
