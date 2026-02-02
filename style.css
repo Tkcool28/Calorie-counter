@@ -81,7 +81,7 @@ body{
 
 label{ display:block; font-size: 12px; color: var(--muted2); margin-bottom: 6px; }
 
-input, select, button{
+input, select, button, textarea{
   width: 100%;
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,.12);
@@ -90,6 +90,8 @@ input, select, button{
   padding: 10px 12px;
   outline: none;
 }
+
+textarea{ min-height: 120px; resize: vertical; }
 
 .checkbox{
   display:flex;
@@ -249,3 +251,61 @@ th{ color: var(--muted); font-weight: 900; }
 @media (max-width: 600px){
   .kpi3{ grid-template-columns: 1fr; }
 }
+
+/* ---------------- FULL-SCREEN HELP SCREEN ---------------- */
+.helpModal{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.helpInner{
+  width: min(980px, 96vw);
+  height: min(760px, 92vh);
+  background: rgba(12,18,32,.96);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 18px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.45);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.helpTop{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+.helpTitle{
+  font-weight: 950;
+  font-size: 18px;
+}
+.helpClose{ width: auto; padding: 10px 12px; }
+
+.helpBody{
+  padding: 14px;
+  overflow: auto;
+}
+
+.helpSplit{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+@media (max-width: 900px){
+  .helpSplit{ grid-template-columns: 1fr; }
+}
+
+.helpBoxTitle{
+  font-weight: 950;
+  margin-bottom: 8px;
+}
+
+a{ color: rgba(6,182,212,.95); font-weight: 900; }
