@@ -91,7 +91,7 @@ input, select, button, textarea{
   outline: none;
 }
 
-textarea{ min-height: 120px; resize: vertical; }
+textarea{ min-height: 110px; resize: vertical; }
 
 .checkbox{
   display:flex;
@@ -252,27 +252,27 @@ th{ color: var(--muted); font-weight: 900; }
   .kpi3{ grid-template-columns: 1fr; }
 }
 
-/* ---------------- FULL-SCREEN HELP SCREEN ---------------- */
+/* ---------- FULL SCREEN HELP "SCREEN" ---------- */
 .helpModal{
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,.55);
   backdrop-filter: blur(8px);
   z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
 }
 .helpInner{
   width: min(980px, 96vw);
-  height: min(760px, 92vh);
+  height: min(780px, 92vh);
   background: rgba(12,18,32,.96);
   border: 1px solid rgba(255,255,255,.12);
   border-radius: 18px;
   box-shadow: 0 30px 80px rgba(0,0,0,.45);
-  overflow: hidden;
-  display: flex;
+  overflow:hidden;
+  display:flex;
   flex-direction: column;
 }
 .helpTop{
@@ -282,15 +282,12 @@ th{ color: var(--muted); font-weight: 900; }
   padding: 14px;
   border-bottom: 1px solid rgba(255,255,255,.10);
 }
-.helpTitle{
-  font-weight: 950;
-  font-size: 18px;
-}
-.helpClose{ width: auto; padding: 10px 12px; }
+.helpTitle{ font-weight: 950; font-size: 18px; }
+.helpClose{ width:auto; padding:10px 12px; }
 
 .helpBody{
   padding: 14px;
-  overflow: auto;
+  overflow:auto;
 }
 
 .helpSplit{
