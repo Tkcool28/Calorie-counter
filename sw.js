@@ -1,4 +1,4 @@
-const CACHE = "calorie-quest-v5";
+const CACHE = "calorie-quest-v6";
 const ASSETS = [
   "./",
   "./index.html",
@@ -8,9 +8,7 @@ const ASSETS = [
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(ASSETS))
-  );
+  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)));
   self.skipWaiting();
 });
 
