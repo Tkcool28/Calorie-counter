@@ -1,4 +1,4 @@
-const CACHE = "calorie-quest-v6";
+const CACHE = "calorie-quest-v7"; // bump version to force update
 const ASSETS = [
   "./",
   "./index.html",
@@ -13,7 +13,13 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => (k !== CACHE ? caches.delete(k) : null)));
+      await self.clients.claim();
+    })()
+  );
 });
 
 self.addEventListener("fetch", (event) => {
