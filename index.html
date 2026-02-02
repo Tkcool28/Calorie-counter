@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>Calorie Quest</title>
+
+  <!-- PWA manifest (inline via data URL so we keep 4 files total) -->
+  <link rel="manifest" href="data:application/manifest+json,{
+    &quot;name&quot;:&quot;Calorie Quest&quot;,
+    &quot;short_name&quot;:&quot;CalorieQuest&quot;,
+    &quot;start_url&quot;:&quot;.&quot;,
+    &quot;display&quot;:&quot;standalone&quot;,
+    &quot;background_color&quot;:&quot;#0b1220&quot;,
+    &quot;theme_color&quot;:&quot;#0b1220&quot;
+  }">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg"></div>
+
+  <header class="container header">
+    <div>
+      <div class="title">Calorie Quest 🔥</div>
+      <div class="subtitle">Free PWA calorie + macro tracker (offline-first) • weekly & monthly analytics</div>
+    </div>
+    <div class="pillRow">
+      <span class="pill">Install on iOS: Safari → Share → Add to Home Screen</span>
+      <span class="pill">Android: Chrome → ⋮ → Add to Home screen</span>
+    </div>
+  </header>
+
+  <main class="container grid">
+    <!-- LEFT -->
+    <section class="card">
+      <div class="cardTitle">Log Food</div>
+      <div class="hint">Search calories/macros by food + serving size. Offline DB + optional Open Food Facts.</div>
+
+      <div class="hr"></div>
+
+      <div class="row">
+        <div class="field grow2">
+          <label>Food name</label>
+          <input id="foodQuery" placeholder="e.g., chicken breast, oats, banana..." />
+        </div>
+        <div class="field">
+          <label>Serving (g)</label>
+          <input id="grams" inputmode="numeric" value="100" />
+        </div>
+        <div class="field">
+          <label>Meal</label>
+          <select id="meal">
+            <option>Breakfast</option>
+            <option>Lunch</option>
+            <option>Snack</option>
+            <option>Dinner</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Search mode</label>
+          <select id="searchMode">
+            <option value="offline">Offline (fast)</option>
+            <option value="openfoodfacts">Open Food Facts (free)</option>
+          </select>
+        </div>
+        <div class="field grow">
+          <label>&nbsp;</label>
+          <button class="btn primary" id="btnSearch">Search ✔️</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="checkbox">
+          <input type="checkbox" id="manualMode">
+          Manual entry (override search)
+        </label>
+      </div>
+
+      <div id="preview" class="subcard hidden"></div>
+
+      <div id="manualPanel" class="subcard hidden">
+        <div class="subTitle">Manual nutrition for this serving</div>
+        <div class="row">
+          <div class="field">
+            <label>Calories</label>
+            <input id="m_cal" inputmode="numeric" value="0" />
+          </div>
+          <div class="field">
+            <label>Protein (g)</label>
+            <input id="m_p" inputmode="numeric" value="0" />
+          </div>
+          <div class="field">
+            <label>Carbs (g)</label>
+            <input id="m_c" inputmode="numeric" value="0" />
+          </div>
+          <div class="field">
+            <label>Fat (g)</label>
+            <input id="m_f" inputmode="numeric" value="0" />
+          </div>
+        </div>
+        <div class="hint">Manual values are logged exactly as entered (for this serving).</div>
+      </div>
+
+      <div class="row">
+        <button class="btn primary grow" id="btnLog">Log it ✔️</button>
+        <button class="btn ghost grow" id="btnHelp">Help 🤔</button>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="cardTitle">Today’s Log</div>
+      <div id="todayLog" class="hint">No entries yet.</div>
+    </section>
+
+    <!-- RIGHT -->
+    <section>
+      <div class="card">
+        <div class="cardTitle">Daily Goals</div>
+        <div class="hint">Saved per-day (offline). Edit any time.</div>
+        <div class="hr"></div>
+
+        <div class="row">
+          <div class="field">
+            <label>Calories</label>
+            <input id="g_cal" inputmode="numeric" value="2200" />
+          </div>
+          <div class="field">
+            <label>Protein (g)</label>
+            <input id="g_p" inputmode="numeric" value="150" />
+          </div>
+          <div class="field">
+            <label>Carbs (g)</label>
+            <input id="g_c" inputmode="numeric" value="250" />
+          </div>
+          <div class="field">
+            <label>Fat (g)</label>
+            <input id="g_f" inputmode="numeric" value="70" />
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="btn primary grow" id="btnSaveGoals">Save goals ✔️</button>
+          <button class="btn danger grow" id="btnResetDay">Reset today ❗</button>
+        </div>
+      </div>
+
+      <div class="card mt">
+        <div class="cardTitle">Progress Dashboard</div>
+        <div id="kpis" class="kpis"></div>
+        <div id="bars"></div>
+      </div>
+
+      <div class="card mt">
+        <div class="cardTitle">Analytics</div>
+        <div class="hint">Weekly (7D) + Monthly (30D) + Calendar Month trend charts.</div>
+
+        <div class="tabs">
+          <button class="tab active" id="tab7">7D</button>
+          <button class="tab" id="tab30">30D</button>
+          <button class="tab" id="tabCal">Calendar Month</button>
+        </div>
+
+        <div id="monthPicker" class="row hidden" style="margin-top:10px;">
+          <div class="field grow">
+            <label>Select month</label>
+            <select id="selMonth"></select>
+          </div>
+        </div>
+
+        <div class="analyticsGrid">
+          <div>
+            <div class="subTitle">Calories Trend</div>
+            <canvas id="chartCal" class="chart"></canvas>
+          </div>
+          <div>
+            <div class="subTitle">Protein Trend</div>
+            <canvas id="chartP" class="chart"></canvas>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <div id="analyticsKpis" class="kpi3"></div>
+      </div>
+
+      <div class="card mt hidden" id="helpPanel"></div>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <small>Stored locally in your browser (localStorage). No account. No backend. Free forever.</small>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
