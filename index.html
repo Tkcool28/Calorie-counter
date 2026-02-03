@@ -1,70 +1,64 @@
 <!doctype html>
 <html lang="en">
-<head>. <!-- redeploy --> <link rel="apple-touch-icon" href="apple-touch-icon.png"> <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0f172a">
+<head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0b1220" />
-  <title>Calorie Quest</title>
 
-  <!-- Minimal manifest (inline so we stay at 4 files) -->
-  <link rel="manifest" href="data:application/manifest+json,{
-    &quot;name&quot;:&quot;Calorie Quest&quot;,
-    &quot;short_name&quot;:&quot;CalorieQuest&quot;,
-    &quot;start_url&quot;:&quot;.&quot;,
-    &quot;display&quot;:&quot;standalone&quot;,
-    &quot;background_color&quot;:&quot;#0b1220&quot;,
-    &quot;theme_color&quot;:&quot;#0b1220&quot;
-  }">
+  <!-- Mobile / PWA basics -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f1220" />
+
+  <!-- iOS: install to Home Screen + status bar -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <title>Calorie Quest</title>
 
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <div class="bg"></div>
 
   <header class="container header">
-    <div>
-      <div class="title">Calorie Quest 🔥</div>
-      <div class="subtitle">Free PWA calorie + macro tracker (offline-first) • weekly & monthly analytics</div>
-    </div>
-    <div class="pillRow">
-      <span class="pill">Android: Chrome → ⋮ → Add to Home screen</span>
-      <span class="pill">iOS: Safari → Share → Add to Home Screen</span>
+    <div class="brand">
+      <div class="logo">🔥</div>
+      <div>
+        <div class="title">Calorie Quest</div>
+        <div class="subtitle">Track calories • macros • goals • streak energy</div>
+      </div>
     </div>
   </header>
 
-  <main class="container grid">
-    <!-- LEFT -->
+  <main class="container">
+    <!-- Input Card -->
     <section class="card">
-      <div class="cardTitle">Log Food</div>
-      <div class="hint">Search calories/macros by food + serving grams. Offline DB + optional Open Food Facts (English preferred).</div>
+      <div class="subTitle">Log food</div>
 
-      <div class="hr"></div>
-
-      <div class="row">
-        <div class="field grow2">
-          <label>Food name</label>
-          <input id="foodQuery" placeholder="e.g., chicken breast, oats, banana..." />
+      <div class="grid2">
+        <div class="field">
+          <label>Food</label>
+          <input id="foodQuery" placeholder="e.g., banana, greek yogurt, chicken breast" />
         </div>
+
         <div class="field">
           <label>Serving (g)</label>
-          <input id="grams" inputmode="numeric" value="100" />
+          <input id="grams" type="number" inputmode="numeric" min="0" value="100" />
         </div>
+
         <div class="field">
           <label>Meal</label>
           <select id="meal">
             <option>Breakfast</option>
             <option>Lunch</option>
-            <option>Snack</option>
             <option>Dinner</option>
-            <option>Other</option>
+            <option>Snack</option>
           </select>
         </div>
-      </div>
 
-      <div class="row">
         <div class="field">
           <label>Search mode</label>
           <select id="searchMode">
@@ -72,131 +66,133 @@
             <option value="openfoodfacts">Open Food Facts (free)</option>
           </select>
         </div>
-        <div class="field grow">
-          <label>&nbsp;</label>
-          <button class="btn primary" id="btnSearch">Search ✔️</button>
-        </div>
       </div>
 
-      <div class="row">
-        <label class="checkbox">
-          <input type="checkbox" id="manualMode">
-          Manual entry (override search)
+      <div class="row" style="margin-top:10px;">
+        <button id="btnSearch" class="btn primary grow">Search ✔️</button>
+      </div>
+
+      <div class="row" style="margin-top:8px;">
+        <label class="check">
+          <input id="manualMode" type="checkbox" />
+          <span>Manual entry (override search)</span>
         </label>
       </div>
 
-      <div id="preview" class="subcard hidden"></div>
+      <!-- Manual entry panel -->
+      <div id="manualPanel" class="hidden" style="margin-top:10px;">
+        <div class="subTitle">Manual Nutrition (for this serving)</div>
 
-      <div id="manualPanel" class="subcard hidden">
-        <div class="subTitle">Manual nutrition for this serving</div>
-        <div class="row">
+        <div class="grid2">
           <div class="field">
             <label>Calories</label>
-            <input id="m_cal" inputmode="numeric" value="0" />
+            <input id="m_cal" type="number" inputmode="numeric" min="0" value="0" />
           </div>
           <div class="field">
             <label>Protein (g)</label>
-            <input id="m_p" inputmode="numeric" value="0" />
+            <input id="m_p" type="number" inputmode="decimal" min="0" value="0" />
           </div>
           <div class="field">
             <label>Carbs (g)</label>
-            <input id="m_c" inputmode="numeric" value="0" />
+            <input id="m_c" type="number" inputmode="decimal" min="0" value="0" />
           </div>
           <div class="field">
             <label>Fat (g)</label>
-            <input id="m_f" inputmode="numeric" value="0" />
+            <input id="m_f" type="number" inputmode="decimal" min="0" value="0" />
           </div>
         </div>
-        <div class="hint">Manual values are logged exactly as entered (for this serving).</div>
       </div>
 
-      <div class="row">
-        <button class="btn primary grow" id="btnLog">Log it ✔️</button>
-        <button class="btn ghost grow" id="btnHelp">Help 🤔</button>
+      <!-- Preview -->
+      <div id="preview" class="card subtle hidden" style="margin-top:12px;"></div>
+
+      <div class="row" style="margin-top:10px;">
+        <button id="btnLog" class="btn primary grow">Log it ✔️</button>
       </div>
 
-      <div class="hr"></div>
+      <div class="row" style="margin-top:10px;">
+        <button id="btnHelp" class="btn ghost grow">Help 🤔</button>
+      </div>
+    </section>
 
-      <div class="cardTitle">Today’s Log</div>
+    <!-- Today's progress -->
+    <section class="card">
+      <div class="subTitle">Today</div>
+      <div id="kpis" class="kpis"></div>
+      <div id="bars" style="margin-top:10px;"></div>
+    </section>
+
+    <!-- Today's log -->
+    <section class="card">
+      <div class="subTitle">Today's Log</div>
       <div id="todayLog" class="hint">No entries yet.</div>
-    </section>
-
-    <!-- RIGHT -->
-    <section>
-      <div class="card">
-        <div class="cardTitle">Daily Goals</div>
-        <div class="hint">Saved per-day (offline). Edit any time.</div>
-        <div class="hr"></div>
-
-        <div class="row">
-          <div class="field">
-            <label>Calories</label>
-            <input id="g_cal" inputmode="numeric" value="2200" />
-          </div>
-          <div class="field">
-            <label>Protein (g)</label>
-            <input id="g_p" inputmode="numeric" value="150" />
-          </div>
-          <div class="field">
-            <label>Carbs (g)</label>
-            <input id="g_c" inputmode="numeric" value="250" />
-          </div>
-          <div class="field">
-            <label>Fat (g)</label>
-            <input id="g_f" inputmode="numeric" value="70" />
-          </div>
-        </div>
-
-        <div class="row">
-          <button class="btn primary grow" id="btnSaveGoals">Save goals ✔️</button>
-          <button class="btn danger grow" id="btnResetDay">Reset today ❗</button>
-        </div>
-      </div>
-
-      <div class="card mt">
-        <div class="cardTitle">Progress Dashboard</div>
-        <div id="kpis" class="kpis"></div>
-        <div id="bars"></div>
-      </div>
-
-      <div class="card mt">
-        <div class="cardTitle">Analytics</div>
-        <div class="hint">Weekly (7D) + Monthly (30D) + Calendar Month trend charts.</div>
-
-        <div class="tabs">
-          <button class="tab active" id="tab7">7D</button>
-          <button class="tab" id="tab30">30D</button>
-          <button class="tab" id="tabCal">Calendar Month</button>
-        </div>
-
-        <div id="monthPicker" class="row hidden" style="margin-top:10px;">
-          <div class="field grow">
-            <label>Select month</label>
-            <select id="selMonth"></select>
-          </div>
-        </div>
-
-        <div class="analyticsGrid">
-          <div>
-            <div class="subTitle">Calories Trend</div>
-            <canvas id="chartCal" class="chart"></canvas>
-          </div>
-          <div>
-            <div class="subTitle">Protein Trend</div>
-            <canvas id="chartP" class="chart"></canvas>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-        <div id="analyticsKpis" class="kpi3"></div>
+      <div class="row" style="margin-top:12px;">
+        <button id="btnResetDay" class="btn danger">Reset day</button>
       </div>
     </section>
+
+    <!-- Goals -->
+    <section class="card">
+      <div class="subTitle">Daily Goals</div>
+      <div class="hint">Saved per-day (offline). Edit any time.</div>
+
+      <div class="grid2" style="margin-top:10px;">
+        <div class="field">
+          <label>Calories</label>
+          <input id="g_cal" type="number" inputmode="numeric" min="0" value="2200" />
+        </div>
+        <div class="field">
+          <label>Protein (g)</label>
+          <input id="g_p" type="number" inputmode="decimal" min="0" value="150" />
+        </div>
+        <div class="field">
+          <label>Carbs (g)</label>
+          <input id="g_c" type="number" inputmode="decimal" min="0" value="250" />
+        </div>
+        <div class="field">
+          <label>Fat (g)</label>
+          <input id="g_f" type="number" inputmode="decimal" min="0" value="70" />
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px;">
+        <button id="btnSaveGoals" class="btn primary grow">Save goals ✔️</button>
+      </div>
+    </section>
+
+    <!-- Analytics -->
+    <section class="card">
+      <div class="subTitle">Analytics</div>
+
+      <div class="tabs">
+        <button id="tab7" class="tab active">7 days</button>
+        <button id="tab30" class="tab">30 days</button>
+        <button id="tabCal" class="tab">Calendar</button>
+      </div>
+
+      <div id="monthPicker" class="field hidden" style="margin-top:10px;">
+        <label>Month</label>
+        <select id="selMonth"></select>
+      </div>
+
+      <div id="analyticsKpis" class="kpis" style="margin-top:10px;"></div>
+
+      <div class="chartWrap" style="margin-top:10px;">
+        <div class="hint">Calories</div>
+        <canvas id="chartCal" class="chart"></canvas>
+      </div>
+
+      <div class="chartWrap" style="margin-top:10px;">
+        <div class="hint">Protein</div>
+        <canvas id="chartP" class="chart"></canvas>
+      </div>
+    </section>
+
+    <footer class="footer hint">
+      Tip: On iPhone, open in Safari → Share → Add to Home Screen.
+    </footer>
   </main>
 
-  <footer class="container footer">
-    <small>Stored locally in your browser (localStorage). No account. No backend. Free forever.</small>
-  </footer>
-
-  <script type="module" src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
