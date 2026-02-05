@@ -1,4 +1,4 @@
-const CACHE = "calorie-quest-v8";
+const CACHE = "calorie-quest-v9"; // Updated version
 const CORE = [
   "./",
   "./index.html",
@@ -29,12 +29,16 @@ self.addEventListener("activate", (event) => {
 // Fetch strategy:
 // - Navigation (HTML): network-first (so updates appear)
 // - Static files: cache-first + background refresh
+// - API calls: network-only (never cache API responses)
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // Only handle same-origin
-  if (url.origin !== location.origin) return;
+  // Don't intercept cross-origin requests (API calls, external resources)
+  if (url.origin !== location.origin) {
+    // Let browser handle external requests naturally
+    return;
+  }
 
   // Network-first for navigation
   if (req.mode === "navigate") {
